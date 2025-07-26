@@ -1,5 +1,5 @@
-import { db, notes, type Note, type NewNote } from "~/db/schema";
-import { sql } from "drizzle-orm";
+import { db, notes, type Note, type NewNote } from '~/db/schema';
+import { sql } from 'drizzle-orm';
 
 export async function createNote(data: NewNote): Promise<Note> {
   const [note] = await db.insert(notes).values(data).returning();
@@ -16,12 +16,13 @@ export async function getNoteById(id: number): Promise<Note | null> {
 
 export async function getNotesByUserId(
   userId: number,
-  { limit = 10 }: { limit?: number } = {}
+  { limit = 1000 }: { limit?: number } = {} // Default limit to 1000
 ): Promise<{ notes: Note[] }> {
   const notesList = await db
     .select()
     .from(notes)
     .where(sql`${notes.userId} = ${userId}`)
+    .orderBy(sql`${notes.createdAt} DESC`)
     .limit(limit);
 
   return {
