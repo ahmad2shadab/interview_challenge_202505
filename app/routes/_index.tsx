@@ -4,8 +4,12 @@ import { getUserId } from "~/services/session.server";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: 'Notes App - Your Personal Note Taking Solution' }, // ← UPDATED
+    {
+      name: 'description',
+      content:
+        'Organize your thoughts and ideas with our simple note-taking app',
+    }, // ← UPDATED
   ];
 };
 

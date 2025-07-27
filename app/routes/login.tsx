@@ -1,8 +1,16 @@
+import { MetaFunction } from "@remix-run/node";
 import { json, type ActionFunctionArgs } from "@remix-run/node";
 import { useActionData, useNavigation } from "@remix-run/react";
 import { LoginForm } from "~/components/auth/login-form";
 import { authenticateUser } from "~/services/auth.server";
 import { createUserSession } from "~/services/session.server";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: 'Login - Notes App' },
+    { name: 'description', content: 'Sign in to access your personal notes' },
+  ];
+};
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();

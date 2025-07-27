@@ -6,6 +6,28 @@ import { NoteDetailSkeleton } from '~/components/notes/note-detail-skeleton';
 import { getNoteById } from '~/services/notes.server';
 import { requireUserId } from '~/services/session.server';
 
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  if (!data?.note) {
+    return [
+      { title: 'Note Not Found - Notes App' },
+      { name: 'description', content: 'The requested note could not be found' },
+    ];
+  }
+
+  const noteTitle = data.note.title;
+  const truncatedTitle =
+    noteTitle.length > 50 ? `${noteTitle.substring(0, 50)}...` : noteTitle;
+
+  return [
+    { title: `${truncatedTitle} - Notes App` },
+    {
+      name: 'description',
+      content:
+        data.note.description?.substring(0, 160) || 'View your note details',
+    },
+  ];
+};
+
 export async function loader({ params, request }: LoaderFunctionArgs) {
   // 🔒 SECURITY FIX 1: Authentication Check
   const userId = await requireUserId(request);

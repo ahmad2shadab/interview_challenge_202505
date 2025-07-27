@@ -2,6 +2,7 @@ import {
   json,
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
 } from '@remix-run/node';
 import { useLoaderData, useNavigation, useActionData } from '@remix-run/react';
 import { Button } from '~/components/ui/button';
@@ -26,6 +27,17 @@ import {
 import { Separator } from '~/components/ui/separator';
 import { noteSchema } from '~/schemas/notes';
 import { NotesGridSkeleton } from '~/components/notes/note-skeleton';
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const noteCount = data?.notes?.length || 0;
+  return [
+    { title: `My Notes (${noteCount}) - Notes App` },
+    {
+      name: 'description',
+      content: `Manage your ${noteCount} notes and thoughts in one place`,
+    },
+  ];
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
