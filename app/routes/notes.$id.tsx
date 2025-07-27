@@ -1,4 +1,4 @@
-// FIXED CODE:
+import { MetaFunction } from '@remix-run/node';
 import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useNavigation } from '@remix-run/react';
 import { NoteDetail } from '~/components/notes/note-detail';
@@ -29,7 +29,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  // 🔒 SECURITY FIX 1: Authentication Check
+  // SECURITY FIX 1: Authentication Check
   const userId = await requireUserId(request);
 
   const noteId = parseInt(params.id || '', 10);
@@ -43,7 +43,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     throw new Response('Note not found', { status: 404 });
   }
 
-  // 🔒 SECURITY FIX 2: Authorization Check (Ownership Verification)
+  // SECURITY FIX 2: Authorization Check (Ownership Verification)
   if (note.userId !== userId) {
     throw new Response(
       "Forbidden - You don't have permission to view this note",
