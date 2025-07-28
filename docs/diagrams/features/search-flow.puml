@@ -1,0 +1,50 @@
+@startuml
+title Comprehensive Search Feature – Note-Taking App
+
+actor User
+
+participant "Frontend (Client)" as FE
+participant "Search API (/search endpoint)" as API
+participant "Search Engine\n(Meilisearch / Typesense)" as SE
+participant "Database\n(PostgreSQL via Drizzle ORM)" as DB
+
+== User Interaction ==
+
+User -> FE : Types query in search bar
+activate FE
+note over FE : Debounced input
+FE -> API : Debounced search request\n(GET /search?q=...)
+
+== Backend Processing ==
+
+activate API
+API -> SE : Full-text, fuzzy, synonym search\nfor relevant note IDs
+activate SE
+SE --> API : List of matching note IDs
+deactivate SE
+
+API -> DB : Fetch full note details\nvia Drizzle ORM using IDs
+activate DB
+DB --> API : Note objects (title, content, tags, etc.)
+deactivate DB
+
+API --> FE : Search results with highlighted keywords
+deactivate API
+
+FE --> User : Display formatted search results
+
+== Optional UX Features ==
+
+User -> FE : Uses autocomplete
+note over FE : Shows suggestions via\npre-fetched terms or SE
+
+User -> FE : Views recent searches
+note over FE : Stored locally or via API
+
+User -> FE : Applies tag filters
+note over FE : Included in /search params
+
+User -> FE : Uses keyboard navigation
+note over FE : Up/Down/Enter to navigate\nsearch results
+
+@enduml
