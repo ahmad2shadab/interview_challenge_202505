@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import * as dotenv from "dotenv";
-import { pgTable, serial, text, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp, integer, boolean } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
 import { type InferSelectModel, type InferInsertModel } from "drizzle-orm";
 
@@ -33,14 +33,15 @@ export const users = pgTable("users", {
 /**
  * Notes table schema
  */
-export const notes = pgTable("notes", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id")
+export const notes = pgTable('notes', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id')
     .references(() => users.id)
     .notNull(),
-  title: text("title").notNull(),
-  description: text("description"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  title: text('title').notNull(),
+  description: text('description'),
+  isFavorite: boolean('is_favorite').default(false).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
 /**

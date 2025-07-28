@@ -50,3 +50,13 @@ export async function deleteNote(id: number, userId: number): Promise<boolean> {
     .returning();
   return !!note;
 }
+
+// New function for toggling favorite status
+export async function toggleNoteFavorite(id: number, userId: number): Promise<Note | null> {
+  const [note] = await db
+    .update(notes)
+    .set({ isFavorite: sql`NOT ${notes.isFavorite}` })
+    .where(sql`${notes.id} = ${id} AND ${notes.userId} = ${userId}`)
+    .returning()
+  return note || null
+}
